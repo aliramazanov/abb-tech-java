@@ -18,5 +18,7 @@ public class Cat {
         // Casting
         byte z = (byte) x;
         System.out.println(z);
+        
+        System.out.println("Cat is running");
     }
 }
