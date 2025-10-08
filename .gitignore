@@ -200,3 +200,5 @@ coverage/
 # Spring Boot
 application-local.properties
 application-local.yml
+.idea
+out
