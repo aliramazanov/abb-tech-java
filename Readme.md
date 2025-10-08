@@ -6,14 +6,10 @@ This repository contains all my coursework organized by modules, with homework a
 
 ```
 abb-tech-java/
-├── .idea/
 ├── module01/
 │   ├── classwork/
 │   │   ├── lesson01/          # Independent IntelliJ project
-│   │   │   ├── .idea/
 │   │   │   ├── src/
-│   │   │   ├── lesson01.iml
-│   │   │   └── README.md
 │   │   ├── lesson02/
 │   │   └── ...
 │   └── homework/
