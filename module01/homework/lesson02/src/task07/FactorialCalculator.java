@@ -4,8 +4,8 @@ import java.util.Scanner;
 
 public class FactorialCalculator {
     
-     static void main() {
-       
+    static void main () {
+        
         Scanner scanner = new Scanner(System.in);
         
         IO.println("Enter a number to calculate its factorial: ");
@@ -13,7 +13,8 @@ public class FactorialCalculator {
         
         if (number < 0) {
             IO.println("Factorial can't be calculated for negative numbers");
-        } else {
+        }
+        else {
             int factorial = 1;
             
             for (int i = 1; i <= number; i++) {
