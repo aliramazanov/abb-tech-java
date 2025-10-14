@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class FibonacciPrinter {
     
      static void main() {
+      
         Scanner scanner = new Scanner(System.in);
         
         int howManyNumbers;

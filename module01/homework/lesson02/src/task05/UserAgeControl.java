@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class UserAgeControl {
     
      static void main() {
+       
         Scanner scanner = new Scanner(System.in);
         
         IO.println("Please add your age: ");
