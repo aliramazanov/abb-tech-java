@@ -1,3 +1,5 @@
+package streams;
+
 import java.util.Optional;
 
 @SuppressWarnings({ "ExplicitToImplicitClassMigration", "RedundantSuppression" })

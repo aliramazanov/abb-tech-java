@@ -1,3 +1,5 @@
+package streams;
+
 import java.util.List;
 
 @SuppressWarnings("Convert2MethodRef")

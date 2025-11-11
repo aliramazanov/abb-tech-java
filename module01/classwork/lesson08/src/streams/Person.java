@@ -1,3 +1,5 @@
+package streams;
+
 public class Person {
     
     private String name;

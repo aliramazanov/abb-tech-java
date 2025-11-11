@@ -1,3 +1,5 @@
+package streams;
+
 public class ASCIIValues {
     private final char character;
     private final int asciiValue;
@@ -9,7 +11,7 @@ public class ASCIIValues {
     
     @Override
     public String toString() {
-        return "ASCIIValues{" +
+        return "streams.ASCIIValues{" +
                "character=" + character +
                ", asciiValue=" + asciiValue +
                '}';
