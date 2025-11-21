@@ -14,7 +14,7 @@ public class AnotherPractice {
                 throw new RuntimeException(e);
             }
             
-            counter.increment();
+            counter.incrementSync();
         };
         
         Thread zero = new Thread(runnable, "Zero");
@@ -28,5 +28,13 @@ public class AnotherPractice {
         two.start();
         three.start();
         four.start();
+        
+        Thread threadSync = new Thread(counter::incrementSync);
+        Thread threadNonSync = new Thread(counter::increment);
+        
+        threadNonSync.start();
+        threadSync.start();
+        
+        System.out.println("Main Thread");
     }
 }

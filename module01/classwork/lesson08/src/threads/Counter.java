@@ -4,14 +4,30 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("CommentedOutCode")
 public class Counter {
-
+    
     private int count;
-    private AtomicInteger aInt = new AtomicInteger();
-   
+    private final AtomicInteger aInt = new AtomicInteger();
+    
+    private Object syncBlock = new Object();
+    private Object syncMethod = new Object();
+    
     // synchronized - non-access modifier
-    public synchronized void increment () {
+    public synchronized void incrementSync () {
         count++;
         System.out.println("Count is: " + count);
+    }
+    
+    public void increment () {
+        synchronized (this) {
+            try {
+                count++;
+                System.out.println("Count is: " + count);
+                Thread.sleep(2000);
+            }
+            catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
     
     /* public void increment () {
@@ -37,4 +53,7 @@ public class Counter {
     public void incrementAtomic () {
     
     }
+    
+    // Reentrant Lock
+    // Deadlock, Livelock, Starvation
 }
