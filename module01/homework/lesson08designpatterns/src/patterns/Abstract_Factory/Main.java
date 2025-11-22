@@ -4,8 +4,8 @@ public class Main {
     
     static void main () {
         
-        Employee ali = new Employee("E001", "Ali");
-        Employee sara = new Employee("E002", "Sara");
+        Employee ali = new Employee("Ali");
+        Employee sara = new Employee("Sara");
         
         DocumentFactory paymentFactoryForAli = new PaymentFactory(5000);
         DocumentFactory paymentFactoryForSara = new PaymentFactory(5500);
