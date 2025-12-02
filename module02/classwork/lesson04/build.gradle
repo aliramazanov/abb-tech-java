@@ -1,0 +1,81 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group = 'com.abb'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+war {
+    archiveFileName = 'my-servlet-app.war'
+    archiveBaseName = 'my-servlet-app'
+}
+
+def tomcatService    = 'tomcat'
+def tomcatWebappsDir = '/var/lib/tomcat/webapps'
+def warFileName      = 'my-servlet-app.war'
+
+tasks.register('deployToTomcat', Exec) {
+    dependsOn war
+
+    def warFile = layout.buildDirectory.file("libs/${warFileName}").get().asFile
+
+    commandLine 'bash', '-c', "sudo cp ${warFile} ${tomcatWebappsDir}/"
+
+    doLast {
+        println ""
+        println "=" * 60
+        println "WAR deployed to Tomcat!"
+        println "Tomcat will auto-deploy in a few seconds..."
+        println "Access: http://localhost:8080/my-servlet-app"
+        println "=" * 60
+    }
+}
+
+tasks.register('deployWithRestart', Exec) {
+    dependsOn war
+
+    def warFile = layout.buildDirectory.file("libs/${warFileName}").get().asFile
+
+    commandLine 'bash', '-c', """
+        sudo systemctl stop ${tomcatService} && \
+        sudo rm -rf ${tomcatWebappsDir}/my-servlet-app* && \
+        sudo cp ${warFile} ${tomcatWebappsDir}/ && \
+        sudo systemctl start ${tomcatService}
+    """
+
+    doLast {
+        println ""
+        println "=" * 60
+        println "Deployment completed with restart!"
+        println "Access: http://localhost:8080/my-servlet-app"
+        println "=" * 60
+    }
+}
+
+tasks.register('cleanTomcat', Exec) {
+    commandLine 'bash', '-c', """
+        sudo systemctl stop ${tomcatService} && \
+        sudo rm -rf ${tomcatWebappsDir}/my-servlet-app* && \
+        sudo systemctl start ${tomcatService}
+    """
+
+    doLast {
+        println "Tomcat cleaned!"
+    }
+}
