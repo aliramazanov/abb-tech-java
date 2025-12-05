@@ -1,7 +1,6 @@
 package com.abb;
 
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebInitParam;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +15,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "TaskServlet", urlPatterns = "/tasks")
+@WebServlet(
+        name = "TaskServlet",
+        urlPatterns = "/tasks",
+        initParams = { @WebInitParam(name = "dbFileName", value = "database.txt") }
+)
 public class Tasks extends HttpServlet {
     
     private String databasePath;
@@ -31,8 +34,21 @@ public class Tasks extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         
         try {
-            String content = Files.readString(Paths.get(databasePath), StandardCharsets.UTF_8);
+            String content = Files.readString(
+                    Paths.get(databasePath),
+                    StandardCharsets.UTF_8
+            );
+            
             resp.getWriter().write(content);
+            
+            String counter = (String) getServletContext().getAttribute("requestCounter");
+            
+            int count = Integer.parseInt(counter) + 1;
+            
+            getServletContext().setAttribute("requestCounter", String.valueOf(count));
+            
+            resp.getWriter().write("\nRequest Counter: " + count);
+            
             resp.setStatus(HttpServletResponse.SC_OK);
         }
         catch (IOException e) {
@@ -92,9 +108,9 @@ public class Tasks extends HttpServlet {
         
         try {
             int lineNumber = Integer.parseInt(lineParam);
-           
+            
             Path filePath = Paths.get(databasePath);
-           
+            
             List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
             
             if (lineNumber < 1 || lineNumber > lines.size()) {
@@ -121,14 +137,15 @@ public class Tasks extends HttpServlet {
     }
     
     @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
+    public void init () {
         
-        databasePath = getServletContext().getRealPath("/WEB-INF/database.txt");
+        String dbFileName = getInitParameter("dbFileName");
+        
+        databasePath = getServletContext().getRealPath("/WEB-INF/" + dbFileName);
         
         if (databasePath == null) {
             String catalinaBase = System.getProperty("catalina.base");
-            databasePath = catalinaBase + "/webapps/ROOT/WEB-INF/database.txt";
+            databasePath = catalinaBase + "/webapps/ROOT/WEB-INF/" + dbFileName;
         }
         
         try {
@@ -139,11 +156,11 @@ public class Tasks extends HttpServlet {
                 Files.createFile(dbPath);
                 log("Created database file at: " + databasePath);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             log("Failed to create database file: " + e.getMessage());
         }
         
         log("Task Servlet Started!");
-        log("Database path: " + databasePath);
     }
 }
