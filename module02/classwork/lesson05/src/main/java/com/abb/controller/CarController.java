@@ -1,52 +1,64 @@
-package com.abb;
+package com.abb.controller;
 
-import com.abb.dto.CarDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
-@WebServlet(name = "CarServlet", urlPatterns = { "/cars" })
-public class CarServlet extends HttpServlet {
+@WebServlet(name = "CarController", urlPatterns = "/cars")
+public class CarController extends HttpServlet {
     
-    private static final ObjectMapper om = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     
-    @SuppressWarnings("CommentedOutCode")
+    private CarService carService;
+    
     @Override
-    protected void doGet (HttpServletRequest req, HttpServletResponse res) throws IOException {
-        
-        CarDTO car = new CarDTO("Porsche", "green", 1996, 320,55536354,"DBCODE-00001" );
-        CarDTO carTwo = new CarDTO("Mercedes-Benz", "black", 2025, 280, 55536354, "DBCODE-00002");
-        
-        ServletContext ctx = getServletContext();
-        
-        ctx.setAttribute("car", car);
-        ctx.setAttribute("carTwo", carTwo);
-        
-        //        res.setStatus(200);
-        //        res.setContentType("text/html");
-        //
-        //        PrintWriter pw = res.getWriter();
-        //
-        //         pw.println(
-        //                "<h1> Car Response </h1>" +
-        //                "<h4>" + car + "</h4>" +
-        //                "<h4>" + carTwo + "</h4>" +
-        //                "<div>" + ctx + "</div>"
-        //        );
-        
-        
-        res.setStatus(200);
-        res.setContentType("application/json");
-        res.getWriter().println(om.writeValueAsString(car));
+    public void init() throws ServletException {
+        carService = new CarServiceImpl(new CarRepositoryImpl());
     }
     
     @Override
-    public void init () {
-        log("Servlet Initialized: Car");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getParameter("id");
+        var params = req.getParameterMap();
+        try {
+            if (id != null) {
+                CarDto car = carService.getCarById(Integer.parseInt(id));
+                resp.getWriter().println(OBJECT_MAPPER.writeValueAsString(car));
+            } else {
+                var cars = carService.getCars();
+                resp.getWriter().println(OBJECT_MAPPER.writeValueAsString(cars));
+            }
+            resp.setStatus(200);
+            resp.setContentType("application/json");
+        } catch (Exception exception) {
+            if (exception instanceof CarNotFoundException) {
+                resp.setStatus(404);
+                resp.getWriter().println("Car not found");
+            } else {
+                resp.setStatus(500);
+                resp.getWriter().println("Internal Server Error");
+            }
+            
+        }
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        StringBuffer sb = new StringBuffer();
+        try (BufferedReader bufferedReader = req.getReader()) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+        }
+        CarDto CarDto = OBJECT_MAPPER.readValue(sb.toString(), CarDto.class);
+        carService.addCar(CarDto);
+        resp.setStatus(201);
     }
 }

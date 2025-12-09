@@ -1,30 +1,89 @@
 package com.abb.dto;
 
-public class Car {
-    String name;
-    String color;
-    int year;
-    int speed;
+public class CarDTO {
+    private String color;
+    private int speed;
+    private int id;
     
-    public Car (
-            String name,
-            String color,
-            int year,
-            int speed
-    ) {
-        this.name = name;
+    public CarDTO (String color, int speed) {
         this.color = color;
-        this.year = year;
         this.speed = speed;
     }
     
-    @Override
-    public String toString () {
-        return "Car{" +
-               "name='" + name + '\'' +
-               ", color='" + color + '\'' +
-               ", year=" + year +
-               ", speed=" + speed +
-               '}';
+    
+    public CarDTO () {
     }
+    
+    private CarDTO (CarBuilder builder) {
+        this.color = builder.color;
+        this.speed = builder.speed;
+        this.id = builder.id;
+    }
+    
+    public static CarBuilder builder () {
+        return new CarBuilder();
+    }
+    
+    public String getColor () {
+        return color;
+    }
+    
+    public void setColor (String color) {
+        this.color = color;
+    }
+    
+    public int getSpeed () {
+        return speed;
+    }
+    
+    public void setSpeed (int speed) {
+        this.speed = speed;
+    }
+    
+    public int getId () {
+        return id;
+    }
+    
+    public void setId (int id) {
+        this.id = id;
+    }
+    
+    public static class CarBuilder {
+        private String color;
+        private int speed;
+        private int id;
+        
+        
+        public CarBuilder () {
+        }
+        
+        public CarBuilder (String color, int speed, int id) {
+            this.color = color;
+            this.speed = speed;
+            this.id = id;
+        }
+        
+        
+        public CarBuilder color (String color) {
+            this.color = color;
+            return this;
+        }
+        
+        public CarBuilder speed (int speed) {
+            this.speed = speed;
+            return this;
+        }
+        
+        public CarBuilder id (int id) {
+            this.id = id;
+            return this;
+        }
+        
+        public CarDTO build () {
+            return new CarDTO(this);
+        }
+        
+    }
+    
 }
+
