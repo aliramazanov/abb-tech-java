@@ -1,0 +1,20 @@
+server:
+  servlet:
+    context-path: /api
+
+spring:
+  profiles:
+    active: ${SPRING_PROFILE:local}
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:car}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      schema: ${DB_SCHEMA:public}
+      minimum-idle: 2
+      idle-timeout: 40000
+      maximum-pool-size: 10
+      connection-timeout: 10000
+      keepalive-time: 30000
+      auto-commit: false

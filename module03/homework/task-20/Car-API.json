@@ -1,0 +1,196 @@
+{
+  "info": {
+    "_postman_id": "daee7dd1-551e-407e-ac15-6f7ebc55e7ca",
+    "name": "Car API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29487700",
+    "_collection_link": "https://go.postman.co/collection/29487700-daee7dd1-551e-407e-ac15-6f7ebc55e7ca?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create Car",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "    var jsonData = pm.response.json();",
+              "    pm.collectionVariables.set('carId', jsonData.id);",
+              "    pm.test('Car created with ID', function() {",
+              "        pm.expect(jsonData.id).to.not.be.empty;",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Pagani\",\n    \"color\": \"Volcano Red\"\n}"
+        },
+        "url": {
+          "raw": "{{URL}}/cars",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "cars"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Car Error",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"\",\n    \"color\": \"red\"\n}"
+        },
+        "url": {
+          "raw": "{{URL}}/cars",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "cars"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Cars",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}/cars",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "cars"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Car by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}/cars/{{carId}}",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "cars",
+            "{{carId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Car",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Mercedes\",\n    \"color\": \"white\"\n}"
+        },
+        "url": {
+          "raw": "{{URL}}/cars/{{carId}}",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "cars",
+            "{{carId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Car",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{URL}}/cars/{{carId}}",
+          "host": [
+            "{{URL}}"
+          ],
+          "path": [
+            "cars",
+            "{{carId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "URL",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "carId",
+      "value": ""
+    }
+  ]
+}
